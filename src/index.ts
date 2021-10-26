@@ -1,12 +1,10 @@
+import 'dotenv/config';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import { ApolloServer } from 'apollo-server-express';
-import dotenv from 'dotenv';
 import express from 'express';
 import http from 'http';
-import typeDefs from './schema';
-import resolver from './resolver';
-
-dotenv.config();
+import resolver from './graphql/resolver';
+import typeDefs from './graphql/schema';
 
 const port = process.env.PORT || 4000;
 
