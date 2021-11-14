@@ -3,6 +3,8 @@
     "lib": ["esnext"],
     "module": "commonjs",
     "target": "esnext",
+    "outDir": "dist",
+    "sourceMap": true,
 
     "strict": true,
     "esModuleInterop": true,

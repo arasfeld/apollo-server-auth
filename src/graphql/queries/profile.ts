@@ -7,6 +7,8 @@ export const profile = async (
 ): Promise<User> => {
   return {
     id: 'test-id',
-    email: 'test@test.com'
+    email: 'test@test.com',
+    username: 'test',
+    passwordHash: '',
   };
 }

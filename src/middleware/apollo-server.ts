@@ -6,10 +6,16 @@ import typeDefs from '../graphql/schema';
 
 export default async (app: Express) => {
   const httpServer = app.get('httpServer'); // TODO: move this into a function or enum
+  const pgPool = app.get('pgPool'); // TODO: move this into a function or enum
   const apolloServer = new ApolloServer({
     typeDefs,
     resolvers: [resolver],
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    context: ({ req, res }) => ({
+      dbPool: pgPool,
+      req,
+      res,
+    }),
   });
   await apolloServer.start();
   apolloServer.applyMiddleware({ app });

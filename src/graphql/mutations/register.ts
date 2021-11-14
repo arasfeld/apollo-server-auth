@@ -1,19 +1,17 @@
+import { genSaltSync, hashSync } from 'bcryptjs';
 import type { Context, RegisterInput, RegisterPayload, User } from '../../types';
-import users from '../../users';
 
 export const register = async (
   _parent: any,
   { input }: { input: RegisterInput },
-  _context: Context
+  ctx: Context
 ): Promise<RegisterPayload> => {
-  const existingUser = users.find(user => user.email === input.email);
-  if (existingUser) {
-    throw new Error('User already exists');
-  }
-  const user: User = {
-    id: `${users.length + 1}`,
-    email: input.email,
-    password: input.password,
-  };
+  const salt = genSaltSync(10);
+  const hashedPassword = hashSync(input.password, salt);
+  const result = await ctx.dbPool.query(
+    `insert into users(username, email, password_hash) values($1, $2, $3)`,
+    [input.username, input.email, hashedPassword],
+  );
+  const user: User = result.rows[0];
   return { user };
 }

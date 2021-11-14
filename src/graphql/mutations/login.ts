@@ -1,18 +1,21 @@
+import { compareSync } from 'bcryptjs';
 import { AuthenticationError } from 'apollo-server-core';
-import type { Context, LoginInput, LoginPayload } from '../../types';
-import users from '../../users';
+import type { Context, LoginInput, LoginPayload, User } from '../../types';
 
 export const login = async (
   _parent: any,
   { input }: { input: LoginInput },
-  _context: Context
+  ctx: Context
 ): Promise<LoginPayload> => {
-  const user = users.find(user => user.email === input.email);
+  const result = await ctx.dbPool.query<User>(
+    `select * from users where username = $1`,
+    [input.username]
+  );
+  const user = result.rowCount > 0 ? result.rows[0] : undefined;
   if (!user) {
     throw new AuthenticationError('User does not exist');
   }
-  // TODO: should hash password input and compare hashed values
-  if (user.password !== input.password) {
+  if (!compareSync(input.password, user.passwordHash)) {
     throw new AuthenticationError('Password incorrect');
   }
   return { user };

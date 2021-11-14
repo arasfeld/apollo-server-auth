@@ -4,6 +4,7 @@ export default gql`
   input LoginInput {
     email: String!
     password: String!
+    username: String!
   }
 
   type LoginPayload {
@@ -27,6 +28,7 @@ export default gql`
   input RegisterInput {
     email: String!
     password: String!
+    username: String!
   }
 
   type RegisterPayload {
@@ -36,5 +38,6 @@ export default gql`
   type User {
     id: ID!
     email: String!
+    username: String!
   }
 `;

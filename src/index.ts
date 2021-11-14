@@ -11,6 +11,7 @@ async function start() {
   const httpServer = http.createServer(app);
   app.set('httpServer', httpServer); // TODO: move this to a function or enum
 
+  await middleware.installPostgres(app);
   await middleware.installApolloServer(app);
 
   httpServer.listen({ port }, () => {
