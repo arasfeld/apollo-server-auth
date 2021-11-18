@@ -1,13 +1,14 @@
 import { compareSync } from 'bcryptjs';
 import { AuthenticationError } from 'apollo-server-core';
+import { createTokenCookie } from '../../token';
 import type { Context, LoginInput, LoginPayload, User } from '../../types';
 
 export const login = async (
   _parent: any,
   { input }: { input: LoginInput },
-  ctx: Context
+  { dbPool, res }: Context
 ): Promise<LoginPayload> => {
-  const result = await ctx.dbPool.query<User>(
+  const result = await dbPool.query<User>(
     `select * from users where username = $1`,
     [input.username]
   );
@@ -18,5 +19,6 @@ export const login = async (
   if (!compareSync(input.password, user.passwordHash)) {
     throw new AuthenticationError('Password incorrect');
   }
+  createTokenCookie(user, res);
   return { user };
 }
