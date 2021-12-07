@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { sign, verify } from 'jsonwebtoken';
-import type { User } from './types';
+import { User } from '../entities';
 
 const COOKIE_NAME = 'token';
 const MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days
@@ -11,8 +11,8 @@ if (!JWT_SECRET) {
   throw new Error('JWT_SECRET environment variable must be set');
 }
 
-export const createTokenCookie = (user: User, res: Response) => {
-  const token = sign(user, JWT_SECRET, { expiresIn: '7d' });
+export const createTokenCookie = (payload: User, res: Response) => {
+  const token = sign(payload, JWT_SECRET, { expiresIn: '7d' });
   res.cookie(
     COOKIE_NAME,
     token,

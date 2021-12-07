@@ -1,4 +1,5 @@
-import type { Context, User } from '../../types';
+import { Context } from '../../context';
+import { User } from '../../entities';
 
 export const profile = async (
   _parent: any,

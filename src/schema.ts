@@ -32,7 +32,7 @@ export default gql`
   }
 
   type RegisterPayload {
-    user: User!
+    success: Boolean
   }
 
   type User {

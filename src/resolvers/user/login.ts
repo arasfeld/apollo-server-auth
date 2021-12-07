@@ -1,18 +1,25 @@
 import { compareSync } from 'bcryptjs';
 import { AuthenticationError } from 'apollo-server-core';
-import { createTokenCookie } from '../../token';
-import type { Context, LoginInput, LoginPayload, User } from '../../types';
+import { User } from '../../entities';
+import { createTokenCookie } from '../../utils/token-handler';
+import { Context } from '../../context';
+
+export interface LoginInput {
+  password: string;
+  username: string;
+}
+
+export interface LoginPayload {
+  user: User;
+}
 
 export const login = async (
   _parent: any,
   { input }: { input: LoginInput },
-  { dbPool, res }: Context
+  { em, res }: Context
 ): Promise<LoginPayload> => {
-  const result = await dbPool.query<User>(
-    `select * from users where username = $1`,
-    [input.username]
-  );
-  const user = result.rowCount > 0 ? result.rows[0] : undefined;
+  const userRepository = em.getRepository(User);
+  const user = await userRepository.findOne({ username: input.username });
   if (!user) {
     throw new AuthenticationError('User does not exist');
   }

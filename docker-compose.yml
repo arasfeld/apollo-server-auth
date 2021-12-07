@@ -9,4 +9,3 @@ services:
       - ./.env
     volumes:
       - ./pgdata:/var/lib/postgresql/data
-      - ./src/init-db.sql:/docker-entrypoint-initdb.d/init.sql
