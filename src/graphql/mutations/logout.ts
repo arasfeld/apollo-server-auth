@@ -1,5 +1,5 @@
 import { clearTokenCookie } from '../../token';
-import type { Context, LogoutPayload } from '../../types';
+import type { Context, LogoutPayload } from '../types';
 
 export const logout = async (
   _parent: any,

@@ -1,8 +1,8 @@
+import { UsersDataSource } from './../graphql/data-sources/users';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import { ApolloServer } from 'apollo-server-express';
 import type { Express } from 'express';
-import resolver from '../graphql/resolver';
-import typeDefs from '../graphql/schema';
+import { resolver, typeDefs } from '../graphql';
 import { getUserFromTokenCookie } from '../token';
 
 export default async (app: Express) => {
@@ -13,10 +13,12 @@ export default async (app: Express) => {
     resolvers: [resolver],
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
     context: ({ req, res }) => ({
-      dbPool: pgPool,
       req,
       res,
       user: getUserFromTokenCookie(req),
+    }),
+    dataSources: () => ({
+      users: new UsersDataSource(pgPool),
     }),
   });
   await apolloServer.start();

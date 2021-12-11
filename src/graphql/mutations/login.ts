@@ -1,18 +1,14 @@
 import { compareSync } from 'bcryptjs';
 import { AuthenticationError } from 'apollo-server-core';
 import { createTokenCookie } from '../../token';
-import type { Context, LoginInput, LoginPayload, User } from '../../types';
+import type { Context, LoginInput, LoginPayload } from '../types';
 
 export const login = async (
   _parent: any,
   { input }: { input: LoginInput },
-  { dbPool, res }: Context
+  { dataSources, res }: Context
 ): Promise<LoginPayload> => {
-  const result = await dbPool.query<User>(
-    `select * from users where username = $1`,
-    [input.username]
-  );
-  const user = result.rowCount > 0 ? result.rows[0] : undefined;
+  const user = await dataSources.users.getByUsername(input.username);
   if (!user) {
     throw new AuthenticationError('User does not exist');
   }

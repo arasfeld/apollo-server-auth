@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-express';
 
-export default gql`
+export const typeDefs = gql`
   input LoginInput {
     email: String!
     password: String!

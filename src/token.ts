@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { sign, verify } from 'jsonwebtoken';
-import type { User } from './types';
+import type { User } from './graphql/types';
 
 const COOKIE_NAME = 'token';
 const MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days
